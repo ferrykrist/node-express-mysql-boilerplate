@@ -18,6 +18,41 @@ A boilerplate for **Node.js** web applications. This boilerplate gives the basic
 6. Run the application with `npm start` (MySQL service should be up and running).
 7. Access `http://localhost:3000` and you're ready to go!
 
+### HOW TO GENERATE SELF SIGN CERTIFICATE
+```
+openssl genrsa -out key.pem
+openssl req -new -key key.pem -out csr.pem
+openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
+```
+
+### APACHE VHOST
+```
+<VirtualHost *:80>
+    ServerName dev.ergonagile.id
+    # with optional timeout settings  
+#    ProxyPass / http://localhost:3000/ connectiontimeout=5 timeout=30
+#        ServerAdmin administrator@n-network.de
+        RewriteEngine On
+        RewriteCond %{HTTPS} off
+        RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+        RewriteRule ^ https://dev.ergonagile.id/%{REQUEST_URI} [P]
+</VirtualHost>
+
+<VirtualHost *:443>
+    SSLProxyEngine on
+    SSLProxyVerify none
+    SSLProxyCheckPeerCN off
+    SSLProxyCheckPeerName off
+    SSLProxyCheckPeerExpire off
+
+    ServerName dev.ergonagile.id
+    # with optional timeout settings  
+    ProxyPreserveHost On
+    ProxyPass / https://localhost:3001/ connectiontimeout=5 timeout=30
+    ProxyPassReverse / https://localhost:3001/
+</VirtualHost>
+```
+
 ### Folder Structure
 ```
 .
