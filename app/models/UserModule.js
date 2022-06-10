@@ -19,4 +19,15 @@ const UserModule = sequelize.define('userModules', {
             }],
     });
 
-module.exports = UserModule;
+async function userModuleGet(userId) {
+    let result = await UserModule.findAll({
+        attributes: ['userId', 'moduleID'],
+        where: {
+            userId: userId
+        },
+        raw: true
+    });
+    return result;
+}
+
+module.exports = { UserModule, userModuleGet };

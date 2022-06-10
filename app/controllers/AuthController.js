@@ -59,8 +59,12 @@ exports.login = (req, res, next) => {
                 .compare(req.body.inputPassword, user.password)
                 .then(doMatch => {
                     if (doMatch) {
+                        let uid = user.dataValues.userId
                         req.session.isLoggedIn = true;
                         req.session.user = user.dataValues;
+                        req.session.userId = uid;
+                        // ambil hak akses
+                        UserModule.userModuleGet(uid).then(result => req.session.userModule = result);
                         return req.session.save(err => {
                             console.log(err);
                             res.redirect('/');

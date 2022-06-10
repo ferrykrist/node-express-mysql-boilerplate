@@ -6,5 +6,5 @@ const Module = require('../app/models/Module');
 
 User.sync();
 Session.sync();
-UserModule.sync();
+UserModule.UserModule.sync();
 Module.sync();
