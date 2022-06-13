@@ -1,3 +1,7 @@
 exports.homePage = (req, res, next) => {
-	res.render('home');
+    let data = {
+        layout: 'admin_layout',
+        pageTitle: 'Home',
+    };
+    res.render('home', data);
 };
