@@ -1,5 +1,5 @@
-DROP VIEW IF EXISTS  view_user_modules;
-CREATE VIEW view_user_modules AS
+DROP VIEW IF EXISTS  view_userModules;
+CREATE VIEW view_userModules AS
 SELECT um.*, m.moduleName
 FROM userModules AS um, modules AS m 
 WHERE um.moduleId=m.moduleId;

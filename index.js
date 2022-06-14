@@ -10,6 +10,7 @@ const expressHbs = require('express-handlebars');
 const SequelizeStore = require("connect-session-sequelize")(session.Store); // initalize sequelize with session store
 const fs = require('fs');
 
+
 const http = require('http');
 const https = require('https');
 const privateKey = fs.readFileSync('./config/certificate/key.pem', 'utf8');
@@ -19,6 +20,7 @@ const credentials = { key: privateKey, cert: certificate };
 const app = express();
 const csrfProtection = csrf();
 const router = express.Router();
+
 
 //Loading Routes
 const webRoutes = require('./routes/web');
@@ -64,6 +66,7 @@ app.engine(
     'hbs',
     expressHbs({
         layoutsDir: 'views/layouts/',
+        partialsDir: 'views/partials/',
         defaultLayout: 'web_layout',
         extname: 'hbs'
     })

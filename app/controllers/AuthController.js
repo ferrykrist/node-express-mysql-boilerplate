@@ -64,7 +64,7 @@ exports.login = (req, res, next) => {
                         req.session.user = user.dataValues;
                         req.session.userId = uid;
                         // ambil hak akses
-                        UserModule.userModuleGet(uid).then(result => req.session.userModule = result);
+                        UserModule.userModuleGet({ userId: uid }).then(result => req.session.userModule = result);
                         return req.session.save(err => {
                             console.log(err);
                             res.redirect('/');
