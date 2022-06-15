@@ -69,7 +69,6 @@ async function userGet(vars = null) {
 
     ('userId' in vars) ? data.where.userId = vars.userId : null;
     ('email' in vars) ? data.where.email = vars.moduleId : null;
-    //console.log(data);
     let result = await User.findAll(data);
 
     return result;

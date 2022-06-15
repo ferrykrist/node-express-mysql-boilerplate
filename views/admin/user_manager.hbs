@@ -1,18 +1,22 @@
 <h5>
-    test
+    {{session.userId}}
+    {{session.user.fullname}}
+    q_usermodule
     <ul>
-        {{userId}}
-        q_usermodule
-        {{#each usermodule}}
+        {{#each q_usermodule}}
         <li>{{this.moduleId}} {{#loud this.moduleName}}{{/loud}}</li>
         {{/each}}
-        {{#if (checkp usermodule Admin2)}}
-        q_usermodule2
+    </ul>
+    {{#if session.pm_admin}}
+    p_admin
+    <ul>
         {{#each q_usermodule2}}
         <li>{{this.moduleId}} {{#loud this.moduleName}}{{/loud}}</li>
         {{/each}}
-        {{/if}}
-        q_users
+    </ul>
+    {{/if}}
+    q_users
+    <ul>
         {{#each q_users}}
         <li>{{this.userId}} {{#loud this.fullname}}{{/loud}}</li>
         {{/each}}

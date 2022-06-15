@@ -50,6 +50,7 @@ app.use(flash());
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isLoggedIn;
     res.locals.csrfToken = req.csrfToken();
+    res.locals.session = req.session;
     next();
 });
 
@@ -77,10 +78,6 @@ app.set('views', 'views');
 app.use(webRoutes);
 app.use(errorController.pageNotFound);
 
-app.use(function (req, res, next) {
-    res.locals.session = req.session;
-    next();
-});
 
 const hbshelper = require('./app/helpers/hbshelpers');
 

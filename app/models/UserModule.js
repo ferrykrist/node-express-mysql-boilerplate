@@ -56,4 +56,5 @@ async function userModuleGet(vars) {
     return result;
 }
 
+
 module.exports = { UserModule, UserModuleRaw, userModuleGet };

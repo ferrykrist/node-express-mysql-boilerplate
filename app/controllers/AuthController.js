@@ -63,8 +63,13 @@ exports.login = (req, res, next) => {
                         req.session.isLoggedIn = true;
                         req.session.user = user.dataValues;
                         req.session.userId = uid;
+
                         // ambil hak akses
-                        UserModule.userModuleGet({ userId: uid }).then(result => req.session.userModule = result);
+                        UserModule.userModuleGet({ opt_select: ["moduleName"], userId: req.session.userId }).then(data => {
+                            data.forEach(e => {
+                                req.session['pm_' + e.moduleName.toLowerCase()] = true;
+                            })
+                        });
                         return req.session.save(err => {
                             console.log(err);
                             res.redirect('/');
