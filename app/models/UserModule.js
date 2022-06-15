@@ -36,8 +36,8 @@ const UserModuleRaw = sequelize.define('userModules', {
             }],
     });
 
-async function userModuleGet(vars, local) {
-    console.log(vars);
+async function userModuleGet(vars) {
+    //console.log(vars);
     // ini contoh query builder dengan sequalize
     let data = {
         raw: true,
@@ -50,10 +50,10 @@ async function userModuleGet(vars, local) {
 
     ('userId' in vars) ? data.where.userId = vars.userId : null;
     ('moduleId' in vars) ? data.where.moduleId = vars.moduleId : null;
-    console.log(data);
+    //console.log(data);
     let result = await UserModule.findAll(data);
 
-    return { result, local };
+    return result;
 }
 
 module.exports = { UserModule, UserModuleRaw, userModuleGet };

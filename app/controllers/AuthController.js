@@ -49,7 +49,7 @@ exports.login = (req, res, next) => {
         req.flash('error', validationErrors);
         return res.redirect('/login');
     }
-    User.findOne({
+    User.User.findOne({
         where: {
             email: req.body.inputEmail
         }
@@ -104,7 +104,7 @@ exports.signUpPage = (req, res, next) => {
 };
 
 exports.signUp = (req, res, next) => {
-    User.findOne({
+    User.User.findOne({
         where: {
             email: req.body.email
         }
@@ -113,7 +113,7 @@ exports.signUp = (req, res, next) => {
             return bcrypt
                 .hash(req.body.password, 12)
                 .then(hashedPassword => {
-                    const user = new User({
+                    const user = new User.UserRaw({
                         fullname: req.body.name,
                         email: req.body.email,
                         password: hashedPassword,
@@ -154,7 +154,7 @@ exports.forgotPassword = (req, res, next) => {
             return res.redirect('/forgot-password');
         }
         const token = buffer.toString('hex');
-        User.findOne({
+        User.UserRaw.findOne({
             where: {
                 email: req.body.email
             }

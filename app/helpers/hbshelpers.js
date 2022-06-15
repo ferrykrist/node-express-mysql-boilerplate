@@ -1,3 +1,17 @@
-const hbs = require('express-handlebars');
+const Handlebars = require('handlebars');
+const checkPermission = require('../middlewares/checkPermission');
 
-hbs.registerHelper('helper_name', function (options) { return 'helper value'; });
+
+Handlebars.registerHelper('loud', function (aString) {
+    return '<strong>' + aString + '</strong>';
+})
+
+Handlebars.registerHelper('checkp', (usermodule, param) => {
+    console.log(usermodule);
+    console.log(param);
+
+    // result = usermodule.find(x => x.moduleName == param) ? true : false;
+    // console.log(usermodule.find(x => x.moduleName == param));
+
+    // return result;
+})
