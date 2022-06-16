@@ -15,6 +15,10 @@
         {{/each}}
     </ul>
     {{/if}}
+
+    {{#if session.pm_admin2}}
+    {{>admin2_menu}}
+    {{/if}}
     q_users
     <ul>
         {{#each q_users}}

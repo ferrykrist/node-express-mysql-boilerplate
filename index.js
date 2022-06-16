@@ -27,6 +27,9 @@ const webRoutes = require('./routes/web');
 const sequelize = require('./config/database');
 const errorController = require('./app/controllers/ErrorController');
 
+const constant = require('./config/constant');
+
+
 env.config();
 app.enable('trust proxy');
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -51,6 +54,10 @@ app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isLoggedIn;
     res.locals.csrfToken = req.csrfToken();
     res.locals.session = req.session;
+    res.locals.env_sitetitle = process.env.SITETITLE;
+    res.locals.env_sitefooter = process.env.SITEFOOTER;
+    res.locals.alert = req.flash('alert');
+    res.locals.canRegister = constant.MY_SITECANREGISTER;
     next();
 });
 
@@ -68,7 +75,7 @@ app.engine(
     expressHbs({
         layoutsDir: 'views/layouts/',
         partialsDir: 'views/partials/',
-        defaultLayout: 'web_layout',
+        defaultLayout: 'admin_layout',
         extname: 'hbs'
     })
 );

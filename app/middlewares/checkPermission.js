@@ -1,10 +1,12 @@
-module.exports = (req, res, next, param) => {
-    var result = false;
-    if (req.session.isLoggedIn) {
-        let modules = req.session.userModule;
-        //console.log(modules);
-        result = modules.find(x => x.moduleName == param) ? true : false;
+const constant = require('../../config/constant');
+
+module.exports = (param) => {
+    return (req, res, next) => {
+        let result = false;
+        if (!req.session[param]) {
+            req.flash = alert({ tipe: 'danger', message: constant.MY_NOAKSES });
+            return res.redirect('/');
+        }
+        next();
     }
-    return result;
-    next();
 }

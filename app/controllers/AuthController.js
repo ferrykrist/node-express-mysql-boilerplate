@@ -1,10 +1,15 @@
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
+const toastr = require('../helpers/toastr');
+const constant = require('../../config/constant');
+
 const User = require('../models/User');
 const Session = require('../models/Session');
 const UserModule = require('../models/UserModule');
 const Module = require('../models/Module');
+const flash = require('express-flash');
+
 
 // const User = UserModel.User;
 // const UserRaw = UserModel.UserRaw;
@@ -37,7 +42,7 @@ exports.loginPage = (req, res, next) => {
     if (res.locals.isAuthenticated) {
         res.redirect('/');
     } else {
-        res.render('login', { layout: 'login_layout', loginPage: true, pageTitle: 'Login', errorMessage: message(req), oldInput: oldInput(req) });
+        res.render('login', { layout: 'login_layout', pageTitle: 'Login', errorMessage: message(req), oldInput: oldInput(req) });
     }
 };
 
@@ -70,6 +75,7 @@ exports.login = (req, res, next) => {
                                 req.session['pm_' + e.moduleName.toLowerCase()] = true;
                             })
                         });
+                        req.flash('alert', toastr({ message: constant.MY_USERWELCOME + user.dataValues.fullname }));
                         return req.session.save(err => {
                             console.log(err);
                             res.redirect('/');
@@ -97,7 +103,7 @@ exports.login = (req, res, next) => {
 exports.logout = (req, res, next) => {
     if (res.locals.isAuthenticated) {
         req.session.destroy(err => {
-            return res.redirect('/');
+            return res.redirect('/login');
         });
     } else {
         return res.redirect('/login');
@@ -105,7 +111,7 @@ exports.logout = (req, res, next) => {
 };
 
 exports.signUpPage = (req, res, next) => {
-    res.render('sign_up', { layout: 'login_layout', signUpPage: true, errorMessage: message(req), oldInput: oldInput(req) });
+    res.render('sign_up', { layout: 'login_layout', errorMessage: message(req), oldInput: oldInput(req) });
 };
 
 exports.signUp = (req, res, next) => {
