@@ -3,6 +3,7 @@ const hlp = require('../helpers/helpers');
 
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
+const constant = require('../../config/constant');
 
 const vUser = sequelize.define('view_users', {
     userId: {
@@ -72,13 +73,23 @@ async function user_get(vars = null) {
     ('userId' in vars) ? data.where.userId = vars.userId : null;
     ('email' in vars) ? data.where.email = vars.moduleId : null;
     let result = await vUser.findAll(data);
-
     return result;
 }
 
 async function user_add(vars) {
-    if (hlp.ObjNotEmpty(vars)) {
-        return await tUser.create(vars);
+    let data = {};
+    if ('email' in vars) {
+        const findemail = tUser.findOne({ where: { email: vars.email } });
+        const pass = bcrypt.hash(('password' in vars) ? vars.password : constant.MY_DEFAULTPASSWORD, 12);
+        Promise.all([findemail, pass])
+            .then(result => {
+                if (!result[0]) {
+                    ('fullname' in vars) ? data.fullname = vars.fullname : data.fullname = 'user_' + hlp.randBetween(100, 999);
+                    data.password = result[1];
+                    data.email = vars.email;
+                    tUser.create(data);
+                }
+            });
     }
 }
 

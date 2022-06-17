@@ -14,7 +14,7 @@ router.get('/', isAuth, HomeController.homePage);
 router.get('/login', AuthController.loginPage);
 router.post('/login', AuthController.login);
 router.post('/logout', AuthController.logout);
-router.get('/sign-up', canRegister, AuthController.signUpPage);
+router.get('/sign-up', canRegister, AuthController.signUp);
 router.post('/sign-up', canRegister, AuthController.signUp);
 router.get('/forgot-password', AuthController.forgotPasswordPage);
 router.post('/forgot-password', AuthController.forgotPassword);

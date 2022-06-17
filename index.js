@@ -17,6 +17,21 @@ const privateKey = fs.readFileSync('./config/certificate/key.pem', 'utf8');
 const certificate = fs.readFileSync('./config/certificate/cert.pem', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 
+process.on('uncaughtException', (error, origin) => {
+    console.log('----- Uncaught exception -----')
+    console.log(error)
+    console.log('----- Exception origin -----')
+    console.log(origin)
+})
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.log('----- Unhandled Rejection at -----')
+    console.log(promise)
+    console.log('----- Reason -----')
+    console.log(reason)
+})
+
+
 const app = express();
 const csrfProtection = csrf();
 const router = express.Router();
@@ -61,14 +76,6 @@ app.use((req, res, next) => {
     next();
 });
 
-router.use((error, request, response, next) => {
-    response.status(error.status || 500).json({
-        status: 'error',
-        error: {
-            message: error.message || serverErrorMsg,
-        },
-    });
-});
 
 
 app.engine(
@@ -76,7 +83,7 @@ app.engine(
     expressHbs({
         layoutsDir: 'views/layouts/',
         partialsDir: 'views/partials/',
-        defaultLayout: 'admin_layout',
+        defaultLayout: 'blank',
         extname: 'hbs'
     })
 );
@@ -85,7 +92,6 @@ app.set('views', 'views');
 
 app.use(webRoutes);
 app.use(errorController.pageNotFound);
-
 
 const hbshelper = require('./app/helpers/hbshelpers');
 

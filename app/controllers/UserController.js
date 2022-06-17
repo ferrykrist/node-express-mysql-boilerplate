@@ -14,20 +14,17 @@ exports.profile = (req, res, next) => {
     if (req.method == 'POST') {
 
     }
-    bcrypt.hash('password', 12).then(hashed => {
-        User.user_add({ fullname: 'Ferry 3', email: '1@1.com', password: hashed })
-            .then(e => {
-                console.log(constant.MY_USERCREATED);
-            })
-            .finally(() => {
-                User.vUser.findOne({ raw: true, where: { userId: req.session.userId } }).then(result => {
+    User.user_add({ email: '1@1.com' });
+    User.vUser.findOne({ raw: true, where: { userId: req.session.userId } }).then(result => {
 
-                    res.locals.q_user = result;
-                    res.render('profile');
-                });
-            })
+        res.locals.q_user = result;
 
-    })
+        let vars = {
+            layout: 'admin_layout',
+            pageTitle: 'User Profile'
+        };
+        res.render('profile', vars);
+    });
 
 
 

@@ -7,6 +7,5 @@
  */
 module.exports = (param) => {
     let dialogscript = `<script> toastr["` + ('tipe' in param ? param.tipe : 'success') + `"]("` + ('message' in param ? param.message : 'Berhasil') + `", "` + ('title' in param ? param.title : 'INFO') + `") </script>`;
-    console.log(dialogscript);
     return dialogscript;
 }

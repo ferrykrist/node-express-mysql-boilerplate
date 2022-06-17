@@ -21,6 +21,8 @@ module.exports = Object.freeze({
     MY_DATADELETE: 'Data dihapus',
     MY_DATAORTUUPDATE: 'Data Ortu berhasil diupdate',
 
+    MY_DEFAULTPASSWORD: 'p4ssword',
+
     MY_SITECANREGISTER: true
 });
 

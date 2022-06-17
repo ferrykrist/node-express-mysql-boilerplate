@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
-const toastr = require('../helpers/toastr');
 const hlp = require('../helpers/helpers');
 
 const constant = require('../../config/constant');
@@ -49,6 +48,7 @@ exports.loginPage = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+
     const validationErrors = [];
     if (!validator.isEmail(req.body.inputEmail)) validationErrors.push('Please enter a valid email address.');
     if (validator.isEmpty(req.body.inputPassword)) validationErrors.push('Password cannot be blank.');
@@ -56,53 +56,47 @@ exports.login = (req, res, next) => {
         req.flash('error', validationErrors);
         return res.redirect('/login');
     }
-    User.vUser.findOne({
-        where: {
-            email: req.body.inputEmail
-        }
-    }).then(user => {
-        if (user) {
-            bcrypt
-                .compare(req.body.inputPassword, user.password)
-                .then(doMatch => {
-                    if (doMatch) {
-                        let uid = user.dataValues.userId
-                        req.session.isLoggedIn = true;
-                        req.session.user = user.dataValues;
-                        req.session.userId = uid;
+    User.vUser.findOne({ where: { email: req.body.inputEmail } })
+        .then(user => {
+            if (user) {
+                bcrypt
+                    .compare(req.body.inputPassword, user.password)
+                    .then(doMatch => {
+                        if (doMatch) {
+                            let uid = user.dataValues.userId
+                            req.session.isLoggedIn = true;
+                            req.session.user = user.dataValues;
+                            req.session.userId = uid;
 
-                        // ambil hak akses
-                        // UserModule.userModuleGet({ opt_select: ["moduleName"], userId: req.session.userId }).then(data => {
-                        //     data.forEach(e => {
-                        //         req.session['pm_' + e.moduleName.toLowerCase()] = true;
-                        //     })
-                        // });
+                            // ambil hak akses
+                            UserModule.userModule_get({ opt_select: ["moduleName"], userId: req.session.userId })
+                                .then(data => { data.forEach(e => { req.session['pm_' + e.moduleName.toLowerCase()] = true; }) });
 
-                        hlp.genAlert(req, { message: constant.MY_USERWELCOME + user.dataValues.fullname });
+                            hlp.genAlert(req, { message: constant.MY_USERWELCOME + user.dataValues.fullname });
 
-
-                        return req.session.save(err => {
-                            console.log(err);
-                            res.redirect('/');
-                        });
-                    }
-                    req.flash('error', 'Invalid email or password.');
-                    req.flash('oldInput', { email: req.body.inputEmail });
-                    return res.redirect('/login');
-                })
-                .catch(err => {
-                    console.log(err);
-                    req.flash('error', 'Sorry! Something went wrong.');
-                    req.flash('oldInput', { email: req.body.inputEmail });
-                    return res.redirect('/login');
-                });
-        } else {
-            req.flash('error', 'No user found with this email');
-            req.flash('oldInput', { email: req.body.inputEmail });
-            return res.redirect('/login');
-        }
-    })
+                            return req.session.save(err => {
+                                console.log(err);
+                                res.redirect('/');
+                            });
+                        }
+                        req.flash('error', constant.MY_USERPASSNOTMATCHED);
+                        req.flash('oldInput', { email: req.body.inputEmail });
+                        return res.redirect('/login');
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        req.flash('error', 'Sorry! Something went wrong.');
+                        req.flash('oldInput', { email: req.body.inputEmail });
+                        return res.redirect('/login');
+                    });
+            } else {
+                req.flash('error', constant.MY_USERDOESNOTEXISTS);
+                req.flash('oldInput', { email: req.body.inputEmail });
+                return res.redirect('/login');
+            }
+        })
         .catch(err => console.log(err));
+
 };
 
 exports.logout = (req, res, next) => {
@@ -115,37 +109,23 @@ exports.logout = (req, res, next) => {
     }
 };
 
-exports.signUpPage = (req, res, next) => {
-    res.render('sign_up', { layout: 'login_layout', errorMessage: message(req), oldInput: oldInput(req) });
-};
 
 exports.signUp = (req, res, next) => {
-    User.vUser.findOne({
-        where: {
-            email: req.body.email
-        }
-    }).then(user => {
-        if (!user) {
-            return bcrypt
-                .hash(req.body.password, 12)
-                .then(hashedPassword => {
-                    const user = new User.tUser({
-                        fullname: req.body.name,
-                        email: req.body.email,
-                        password: hashedPassword,
-                    });
-                    return user.save();
-                })
-                .then(result => {
+    if (req.method == 'POST') {
+        User.vUser.findOne({ where: { email: req.body.email } })
+            .then(user => {
+                if (!user) {
+                    User.user_add({ fullname: req.body.name, email: req.body.email, password: req.body.password });
                     return res.redirect('/login');
-                });
-        } else {
-            req.flash('error', 'E-Mail exists already, please pick a different one.');
-            req.flash('oldInput', { name: req.body.name });
-            return res.redirect('/sign-up');
-        }
-    })
-        .catch(err => console.log(err));
+                } else {
+                    req.flash('error', 'E-Mail exists already, please pick a different one.');
+                    req.flash('oldInput', { name: req.body.name });
+                    return res.redirect('/sign-up');
+                }
+            })
+            .catch(err => console.log(err));
+    }
+    res.render('sign_up', { layout: 'login_layout', errorMessage: message(req), oldInput: oldInput(req) });
 };
 
 exports.forgotPasswordPage = (req, res, next) => {
