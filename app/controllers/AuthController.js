@@ -2,6 +2,8 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const toastr = require('../helpers/toastr');
+const hlp = require('../helpers/helpers');
+
 const constant = require('../../config/constant');
 
 const User = require('../models/User');
@@ -54,7 +56,7 @@ exports.login = (req, res, next) => {
         req.flash('error', validationErrors);
         return res.redirect('/login');
     }
-    User.User.findOne({
+    User.vUser.findOne({
         where: {
             email: req.body.inputEmail
         }
@@ -70,12 +72,15 @@ exports.login = (req, res, next) => {
                         req.session.userId = uid;
 
                         // ambil hak akses
-                        UserModule.userModuleGet({ opt_select: ["moduleName"], userId: req.session.userId }).then(data => {
-                            data.forEach(e => {
-                                req.session['pm_' + e.moduleName.toLowerCase()] = true;
-                            })
-                        });
-                        req.flash('alert', toastr({ message: constant.MY_USERWELCOME + user.dataValues.fullname }));
+                        // UserModule.userModuleGet({ opt_select: ["moduleName"], userId: req.session.userId }).then(data => {
+                        //     data.forEach(e => {
+                        //         req.session['pm_' + e.moduleName.toLowerCase()] = true;
+                        //     })
+                        // });
+
+                        hlp.genAlert(req, { message: constant.MY_USERWELCOME + user.dataValues.fullname });
+
+
                         return req.session.save(err => {
                             console.log(err);
                             res.redirect('/');
@@ -115,7 +120,7 @@ exports.signUpPage = (req, res, next) => {
 };
 
 exports.signUp = (req, res, next) => {
-    User.User.findOne({
+    User.vUser.findOne({
         where: {
             email: req.body.email
         }
@@ -124,7 +129,7 @@ exports.signUp = (req, res, next) => {
             return bcrypt
                 .hash(req.body.password, 12)
                 .then(hashedPassword => {
-                    const user = new User.UserRaw({
+                    const user = new User.tUser({
                         fullname: req.body.name,
                         email: req.body.email,
                         password: hashedPassword,
@@ -165,7 +170,7 @@ exports.forgotPassword = (req, res, next) => {
             return res.redirect('/forgot-password');
         }
         const token = buffer.toString('hex');
-        User.UserRaw.findOne({
+        User.vUser.findOne({
             where: {
                 email: req.body.email
             }

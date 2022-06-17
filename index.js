@@ -61,14 +61,15 @@ app.use((req, res, next) => {
     next();
 });
 
+router.use((error, request, response, next) => {
+    response.status(error.status || 500).json({
+        status: 'error',
+        error: {
+            message: error.message || serverErrorMsg,
+        },
+    });
+});
 
-// app.use(function (request, response, next) {
-//     if (process.env.NODE_ENV != 'development' && !request.secure) {
-//         return response.redirect(301, 'https://' + process.env.BASEURL);
-//         //return response.redirect("https://" + request.headers.host + request.url);
-//     }
-//     next();
-// });
 
 app.engine(
     'hbs',
@@ -104,16 +105,3 @@ httpServer.listen(process.env.PORT, () => {
 httpsServer.listen(process.env.HTTPSPORT, () => {
     console.log('HTTPS Server running on port ' + process.env.HTTPSPORT);
 });
-
-
-//sequelize
-//.sync({ force: true })
-// .sync()
-//.then(() => {
-// app.listen(process.env.PORT);
-//pending set timezone
-// console.log("App listening on port " + process.env.PORT);
-    //})
-    //.catch(err => {
-    //    console.log(err);
-    //});

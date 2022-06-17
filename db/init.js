@@ -4,7 +4,7 @@ const Session = require('../app/models/Session');
 const UserModule = require('../app/models/UserModule');
 const Module = require('../app/models/Module');
 
-User.UserRaw.sync();
+User.tUser.sync();
 Session.sync();
-UserModule.UserModuleRaw.sync();
+UserModule.tUserModule.sync();
 Module.sync();

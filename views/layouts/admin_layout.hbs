@@ -10,6 +10,15 @@
 
     <title>{{pageTitle}}</title>
 
+    <!-- jQuery -->
+    <script src="/vendors/jquery/dist/jquery.min.js"></script> --}}
+
+    <!-- Bootstrap -->
+    <script src="/vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendors/toastr/toastr.min.js"></script>
+
+
+
     <!-- Bootstrap -->
     <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -130,20 +139,14 @@
         </div>
     </div>
 
-    <!-- jQuery -->
 
-    <script src="/vendors/jquery/dist/jquery.min.js"></script> --}}
-
-    <!-- Bootstrap -->
-    <script src="/vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/vendors/toastr/toastr.min.js"></script>
-
-    <!-- Custom Theme Scripts -->
-    <script src="/build/js/custom.js"></script>
 
     {{#if alert}}
     {{{alert}}}
     {{/if}}
+
+    <!-- Custom Theme Scripts -->
+    <script src="/build/js/custom.js"></script>
 </body>
 
 </html>

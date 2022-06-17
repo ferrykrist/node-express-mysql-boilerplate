@@ -1,8 +1,9 @@
 const { STRING } = require('sequelize');
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
+const hlp = require('../helpers/helpers');
 
-const UserModule = sequelize.define('view_userModules', {
+const vUserModule = sequelize.define('view_userModules', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true
@@ -18,7 +19,7 @@ const UserModule = sequelize.define('view_userModules', {
             }],
     });
 
-const UserModuleRaw = sequelize.define('userModules', {
+const tUserModule = sequelize.define('userModules', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -36,7 +37,7 @@ const UserModuleRaw = sequelize.define('userModules', {
             }],
     });
 
-async function userModuleGet(vars) {
+async function userModule_get(vars) {
     //console.log(vars);
     // ini contoh query builder dengan sequalize
     let data = {
@@ -51,10 +52,29 @@ async function userModuleGet(vars) {
     ('userId' in vars) ? data.where.userId = vars.userId : null;
     ('moduleId' in vars) ? data.where.moduleId = vars.moduleId : null;
     //console.log(data);
-    let result = await UserModule.findAll(data);
-
+    let result = await vUserModule.findAll(data);
     return result;
 }
 
+async function userModule_add(vars) {
+    let data = {};
+    ('userId' in vars) ? data.userId = vars.userId : null;
+    ('moduleId' in vars) ? data.moduleId = vars.moduleId : null;
+    if (hlp.ObjNotEmpty(data)) {
+        return await tUserModule.create(data);
+    }
 
-module.exports = { UserModule, UserModuleRaw, userModuleGet };
+}
+
+async function userModule_delete(vars) {
+    let data = {};
+    ('id' in vars) ? data.id = vars.id : null;
+    ('userId' in vars) ? data.userId = vars.userId : null;
+    ('moduleId' in vars) ? data.moduleId = vars.moduleId : null;
+    if (hlp.ObjNotEmpty(data)) {
+        return await tUserModule.destroy({ where: data });
+    }
+}
+
+
+module.exports = { vUserModule, tUserModule, userModule_get, userModule_add, userModule_delete };
