@@ -12,6 +12,7 @@
     "license": "ISC",
     "devDependencies": {
         "nodemon": "^2.0.4",
+        "prettier": "2.7.1",
         "sequelize-cli": "^6.4.1"
     },
     "dependencies": {

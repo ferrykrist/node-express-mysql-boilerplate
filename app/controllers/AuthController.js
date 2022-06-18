@@ -48,54 +48,62 @@ exports.loginPage = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-
-    const validationErrors = [];
-    if (!validator.isEmail(req.body.inputEmail)) validationErrors.push('Please enter a valid email address.');
-    if (validator.isEmpty(req.body.inputPassword)) validationErrors.push('Password cannot be blank.');
-    if (validationErrors.length) {
-        req.flash('error', validationErrors);
-        return res.redirect('/login');
+    if(req.method=='POST') {
+        const validationErrors = [];
+        if (!validator.isEmail(req.body.inputEmail)) validationErrors.push('Please enter a valid email address.');
+        if (validator.isEmpty(req.body.inputPassword)) validationErrors.push('Password cannot be blank.');
+        if (validationErrors.length) {
+            req.flash('error', validationErrors);
+            return res.redirect('/login');
+        }
+        User.vUser.findOne({ where: { email: req.body.inputEmail } })
+            .then(user => {
+                if (user) {
+                    bcrypt
+                        .compare(req.body.inputPassword, user.password)
+                        .then(doMatch => {
+                            if (doMatch) {
+                                let uid = user.dataValues.userId
+                                req.session.isLoggedIn = true;
+                                req.session.user = user.dataValues;
+                                req.session.userId = uid;
+    
+                                // ambil hak akses
+                                UserModule.userModule_get({ opt_select: ["moduleName"], userId: req.session.userId })
+                                    .then(data => { data.forEach(e => { req.session['pm_' + e.moduleName.toLowerCase()] = true; }) });
+    
+                                hlp.genAlert(req, { message: constant.MY_USERWELCOME + user.dataValues.fullname });
+    
+                                return req.session.save(err => {
+                                    console.log(err);
+                                    res.redirect('/');
+                                });
+                            }
+                            req.flash('error', constant.MY_USERPASSNOTMATCHED);
+                            req.flash('oldInput', { email: req.body.inputEmail });
+                            return res.redirect('/login');
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            req.flash('error', 'Sorry! Something went wrong.');
+                            req.flash('oldInput', { email: req.body.inputEmail });
+                            return res.redirect('/login');
+                        });
+                } else {
+                    req.flash('error', constant.MY_USERDOESNOTEXISTS);
+                    req.flash('oldInput', { email: req.body.inputEmail });
+                    return res.redirect('/login');
+                }
+            })
+            .catch(err => console.log(err));
+    } else {
+        if (res.locals.isAuthenticated) {
+            res.redirect('/');
+        } else {
+            res.render('login', { layout: 'login_layout', pageTitle: 'Login', errorMessage: message(req), oldInput: oldInput(req) });
+        }
     }
-    User.vUser.findOne({ where: { email: req.body.inputEmail } })
-        .then(user => {
-            if (user) {
-                bcrypt
-                    .compare(req.body.inputPassword, user.password)
-                    .then(doMatch => {
-                        if (doMatch) {
-                            let uid = user.dataValues.userId
-                            req.session.isLoggedIn = true;
-                            req.session.user = user.dataValues;
-                            req.session.userId = uid;
 
-                            // ambil hak akses
-                            UserModule.userModule_get({ opt_select: ["moduleName"], userId: req.session.userId })
-                                .then(data => { data.forEach(e => { req.session['pm_' + e.moduleName.toLowerCase()] = true; }) });
-
-                            hlp.genAlert(req, { message: constant.MY_USERWELCOME + user.dataValues.fullname });
-
-                            return req.session.save(err => {
-                                console.log(err);
-                                res.redirect('/');
-                            });
-                        }
-                        req.flash('error', constant.MY_USERPASSNOTMATCHED);
-                        req.flash('oldInput', { email: req.body.inputEmail });
-                        return res.redirect('/login');
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        req.flash('error', 'Sorry! Something went wrong.');
-                        req.flash('oldInput', { email: req.body.inputEmail });
-                        return res.redirect('/login');
-                    });
-            } else {
-                req.flash('error', constant.MY_USERDOESNOTEXISTS);
-                req.flash('oldInput', { email: req.body.inputEmail });
-                return res.redirect('/login');
-            }
-        })
-        .catch(err => console.log(err));
 
 };
 

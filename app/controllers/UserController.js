@@ -13,19 +13,27 @@ exports.profile = (req, res, next) => {
 
     if (req.method == 'POST') {
 
+    } else {
+        User.user_add({ email: '1@1.com' });
+        User.vUser.findOne({ raw: true, where: { userId: req.session.userId } }).then(result => {
+    
+            res.locals.q_user = result;
+    
+            let vars = {
+                layout: 'admin_layout',
+                pageTitle: 'User Profile'
+            };
+            res.render('profile', vars);
+
+        });
     }
-    User.user_add({ email: '1@1.com' });
-    User.vUser.findOne({ raw: true, where: { userId: req.session.userId } }).then(result => {
-
-        res.locals.q_user = result;
-
-        let vars = {
-            layout: 'admin_layout',
-            pageTitle: 'User Profile'
-        };
-        res.render('profile', vars);
-    });
-
-
-
 };
+
+exports.list =  (req, res, next) => {
+    let vars = {
+        layout: 'admin_layout',
+        pageTitle: 'User List'
+    };
+    res.render('admin/user_manager', vars);
+
+}
