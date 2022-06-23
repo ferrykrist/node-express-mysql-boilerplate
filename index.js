@@ -40,7 +40,7 @@ const router = express.Router();
 //Loading Routes
 const webRoutes = require('./routes/web');
 const sequelize = require('./config/database');
-const errorController = require('./app/controllers/ErrorController');
+const PageController = require('./app/controllers/PageController');
 
 const constant = require('./config/constant');
 
@@ -49,6 +49,8 @@ env.config();
 app.enable('trust proxy');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 // required for csurf
 app.use(session({
@@ -73,25 +75,30 @@ app.use((req, res, next) => {
     res.locals.env_sitefooter = process.env.SITEFOOTER;
     res.locals.alert = req.flash('alert');
     res.locals.canRegister = constant.MY_SITECANREGISTER;
+    res.locals.constant = {};
+    // constant disimpan di locals supaya bisa dipakai di views
+    Object.keys(constant).forEach(function(key) {
+        res.locals.constant[key]=constant[key]      
+      });
     next();
 });
 
 
 
-app.engine(
-    'hbs',
-    expressHbs({
-        layoutsDir: 'views/layouts/',
-        partialsDir: 'views/partials/',
-        defaultLayout: 'blank',
-        extname: 'hbs'
-    })
-);
-app.set('view engine', 'hbs');
+// app.engine(
+//     'hbs',
+//     expressHbs({
+//         layoutsDir: 'views/layouts/',
+//         partialsDir: 'views/partials/',
+//         defaultLayout: 'blank',
+//         extname: 'hbs'
+//     })
+// );
+app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use(webRoutes);
-app.use(errorController.pageNotFound);
+app.use(PageController.pageNotFound);
 
 const hbshelper = require('./app/helpers/hbshelpers');
 

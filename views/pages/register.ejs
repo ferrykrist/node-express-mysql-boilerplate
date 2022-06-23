@@ -1,0 +1,136 @@
+<div class="card fat">
+    <div class="card-body">
+        <h4 class="card-title">Register</h4>
+        <form id="signUpForm" action="/sign-up" method="POST" class="my-login-validation" novalidate="">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input id="name" type="text" class="form-control" name="name" value="<%= oldInput.name %>" required
+                    autofocus>
+                <div class="invalid-feedback">
+                    What's your name?
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-Mail Address</label>
+                <input id="email" type="email" class="form-control" name="email" value="<%= oldInput.email %>" required>
+                <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                <div class="invalid-feedback">
+                    Your email is invalid
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" class="form-control" name="password" required data-eye>
+                <div class="invalid-feedback">
+                    Password is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Confirm Password</label>
+                <input id="confirm_password" type="password" class="form-control" name="confirm_password" required>
+                <div class="invalid-feedback">
+                    Password is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="custom-checkbox custom-control">
+                    <input type="checkbox" name="agree" id="agree" class="custom-control-input" required="">
+                    <label for="agree" class="custom-control-label">I agree to the <a href="#">Terms and
+                            Conditions</a></label>
+                    <div class="invalid-feedback" id="errorAgree">
+                        You must agree with our Terms and Conditions
+                    </div>
+                </div>
+            </div>
+            <% if (errorMessage) { %>
+                <div class="alert alert-danger" role="alert">
+                    <%= errorMessage %>
+                </div>  
+            <% } %>
+            <div class="form-group m-0">
+                <button type="button" id="btnSubmit" class="btn btn-primary btn-block">
+                    Register
+                </button>
+            </div>
+            <div class="mt-4 text-center">
+                Already have an account? <a href="/login">Login</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#signUpForm input').on('keypress', function () {
+        $(this).parent().removeClass('has-error');
+        $('.help-txt').remove();
+    });
+
+    $('#btnSubmit').on('click', function () {
+        var is_valid = true;
+        var inpName = $('#name');
+        var inpEmail = $('#email');
+        var inpPwd = $('#password');
+        var inpCnfPwd = $('#confirm_password');
+        var chkagree = $('#agree:checkbox:checked');
+        $('#signUpForm input').removeClass('has-error');
+        $('.help-txt').remove();
+
+        if (inpName.val() == '') {
+            inpName.parent().addClass('has-error');
+            inpName.focus();
+            inpName.parent().append('<span class="help-txt">Name is required</span>');
+            is_valid = false;
+        }
+        if (inpEmail.val() == '') {
+            inpEmail.parent().addClass('has-error');
+            inpEmail.focus();
+            inpEmail.parent().append('<span class="help-txt">Email is required</span>');
+            is_valid = false;
+        } else if (isEmail(inpEmail.val()) == false) {
+            inpEmail.parent().addClass('has-error');
+            inpEmail.focus();
+            inpEmail.parent().append('<span class="help-txt"> Please enter a valid email</span>');
+            is_valid = false;
+        }
+        if (inpPwd.val() == '') {
+            inpPwd.parent().addClass('has-error');
+            inpPwd.focus();
+            inpPwd.parent().append('<span class="help-txt">Password is required</span>');
+            is_valid = false;
+        } else if (inpPwd.val().length < 6) {
+            inpPwd.parent().addClass('has-error');
+            inpPwd.focus();
+            inpPwd.parent().append('<span class="help-txt">Password should be atleast 6 charachters</span>');
+            is_valid = false;
+        }
+        if (inpCnfPwd.val() == '') {
+            inpCnfPwd.parent().addClass('has-error');
+            inpCnfPwd.focus();
+            inpCnfPwd.parent().append('<span class="help-txt">Please confirm your password</span>');
+            is_valid = false;
+        } else if (inpPwd.val() != inpCnfPwd.val()) {
+            inpCnfPwd.parent().addClass('has-error');
+            inpCnfPwd.focus();
+            inpCnfPwd.parent().append('<span class="help-txt">Password do not match</span>');
+            is_valid = false;
+        } else if (chkagree.length == 0) {
+            $('#agree').parent().parent().addClass('has-error');
+            $('#agree').focus();
+            $('#errorAgree').show();
+            is_valid = false;
+        }
+        if (is_valid) {
+            var form = $('#signUpForm');
+            var url = form.attr('action');
+            $(this).html('Please wait...');
+            $(this).attr('disabled', 'disabled');
+            form.submit();
+        } else {
+            return false;
+        }
+    });
+</script>

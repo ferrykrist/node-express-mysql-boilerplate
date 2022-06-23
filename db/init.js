@@ -2,9 +2,9 @@
 const User = require('../app/models/User');
 const Session = require('../app/models/Session');
 const UserModule = require('../app/models/UserModule');
-const Module = require('../app/models/Module');
+const Modules = require('../app/models/Modules');
 
 User.tUser.sync();
 Session.sync();
 UserModule.tUserModule.sync();
-Module.sync();
+Modules.sync();

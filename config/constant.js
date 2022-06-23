@@ -19,6 +19,8 @@ module.exports = Object.freeze({
     MY_DATAEDITED: 'Data sudah berhasil diubah',
     MY_DATAINSERT: 'Data sudah ditambahkan',
     MY_DATADELETE: 'Data dihapus',
+    MY_DATADELETECONFIRM: 'Hapus data?',
+
     MY_DATAORTUUPDATE: 'Data Ortu berhasil diupdate',
 
     MY_DEFAULTPASSWORD: 'p4ssword',

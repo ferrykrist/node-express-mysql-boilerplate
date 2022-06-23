@@ -1,0 +1,36 @@
+<li class="nav-item <%= (locals.menu_admin ? 'menu-is-opening menu-open' : '') %>">
+    <a href="#" class="nav-link">
+      <i class="nav-icon fas  fa-gears"></i>
+      <p>
+        Admin
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview" <%- (locals.menu_admin ? 'style="display:block"' : 'style="display: none"') %> >
+      <li class="nav-item">
+        <a href="/users" class="nav-link">
+          <i class="far fa-user nav-icon"></i>
+          <p>User</p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/modules" class="nav-link">
+          <i class="far fa-clipboard nav-icon"></i>
+          <p>Module</p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/api" class="nav-link">
+          <i class="fa fa-paperclip nav-icon"></i>
+          <p>API</p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/debug" class="nav-link">
+          <i class="fa fa-bug nav-icon"></i>
+          <p>Debug</p>
+        </a>
+      </li>
+      
+    </ul>
+</li>

@@ -14,4 +14,25 @@ function randBetween(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-module.exports = { ObjNotEmpty, toastr, genAlert, randBetween }
+function genBreadcrumbs(data){
+    let result = '';
+    Object.keys(data).forEach(function(key) {
+        a = data[key] =='#' ? key : '<a href="'+data[key]+'">'+key+'</a>';
+        result += '<li class="breadcrumb-item">' +a+'</li>';      
+    });
+    return result;
+}
+
+const oldInput = (req) => {
+    let oldInput = req.flash('oldInput');
+    if (oldInput.length > 0) {
+        oldInput = oldInput[0];
+    } else {
+        oldInput = {name: null, email: null}
+    }
+
+    return oldInput;
+}
+
+
+module.exports = { ObjNotEmpty, toastr, genAlert, randBetween,genBreadcrumbs, oldInput}

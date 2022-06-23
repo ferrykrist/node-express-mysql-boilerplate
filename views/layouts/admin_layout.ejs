@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/assets/img/logo.png">
+    <title><%= pageTitle %></title>
+
+    <!-- jQuery -->
+    <script src="/assets/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/assets/dist/js/adminlte.min.js"></script>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="/assets/plugins/fontawesome-free/css/all.min.css">
+    <script src="/assets/plugins/fontawesome-free/js/all.min.js"></script>
+
+    <link rel="stylesheet" href="/assets/dist/css/adminlte.css">
+
+
+    <link rel="stylesheet" href="/assets/plugins/summernote/summernote-bs4.min.css">
+    <script src="/assets/plugins/summernote/summernote-bs4.min.js"></script>
+
+    <link rel="stylesheet" href="/assets/plugins/toastr/toastr.min.css">
+    <script src="/assets/plugins/toastr/toastr.min.js"></script>
+
+    <link rel="stylesheet" href="/assets/plugins/chart.js/Chart.min.css">
+    <script src="/assets/plugins/chart.js/Chart.min.js"></script>
+
+
+    <link rel="stylesheet" href="/assets/plugins/datatables/datatables.min.css">
+    <script type="text/javascript" src="/assets/plugins/datatables/datatables.min.js"></script>
+
+    <link rel="stylesheet" href="/assets/plugins/select2/css/select2.min.css">
+    <script src="/assets/plugins/select2/js/select2.full.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <style>
+        html {
+            font-size: 0.9rem;
+        }
+
+    </style>
+    <link rel="stylesheet" href="/assets/tambahan.css">
+
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+
+
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fa fa-lg fa-user-circle"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header"><%= session.user.fullname %></span>
+                        <div class="dropdown-divider"></div>
+                            <a href="/changepassword" class="dropdown-item"><i class="fas fa-key mr-2"></i> Ganti password</a>
+                            <a class="dropdown-item" href="/">Frontpage</a>
+                            <% if (isAuthenticated) { %>       
+                                <a href="/logout" class="dropdown-item"> Logout</a>                                     
+                            <% } %>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-lime elevation-4">
+            <a href="{{ secure_url('/home" class="brand-link">
+                <img src="/assets/img/logo.png" class="brand-image img-circle elevation-3"
+                    style="opacity: .8">
+                <span class="brand-text font-weight-light"> <%= env_sitetitle %></span>
+            </a>
+
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-flat"
+                        data-widget="treeview" role="menu" sdata-accordion="false">
+                        <% if (session.pm_admin) { %>
+                            <%- include('../admin/admin_menu')  %>                          
+                        <% } %>
+                        <%- include('../public/public_menu')  %> 
+                        
+
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                           <!-- ini dulu page title -->
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <% if (locals.breadcrumbs) { %>
+                                    <%- breadcrumbs %>  
+                                <% } %>
+                            </ol>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <% if (alert) { %>
+                    <%- alert %>  
+                <% } %>
+
+                <div class="container-fluid">
+
+                    <%- include(pages)  %> 
+                </div>
+
+
+            </section>
+        </div>
+
+        <footer class="main-footer text-sm">
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> <a href="#">2022.05</a>
+            </div>
+            <%= env_sitefooter %> 
+        </footer>
+    </div>
+    <!-- ./wrapper -->
+
+    <script>
+        $(document).ready(function() {
+            $('.tdatatable').DataTable({
+                "responsive": true,
+                "pageLength": 20
+            });
+
+            //Initialize Select2 Elements
+            $('.select2').select2();
+
+            $('.datepicker').datepicker({
+                clearBtn: true,
+                format: "yyyy-mm-dd"
+            });
+
+            // Summernote
+            $('.summernote').summernote({
+                height: 250
+            });
+        });
+    </script>
+
+
+
+
+
+
+</body>
+
+</html>
