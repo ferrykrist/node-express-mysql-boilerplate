@@ -70,8 +70,9 @@ async function userModule_delete(vars) {
     let data = {};
     ('id' in vars) ? data.id = vars.id : null;
     ('userId' in vars) ? data.userId = vars.userId : null;
-    ('moduleId' in vars) ? data.moduleId = vars.moduleId : null;
+    ('moduleId' in vars)  ? data.moduleId = vars.moduleId : null;
     if (hlp.ObjNotEmpty(data)) {
+        console.log(data);
         return await tUserModule.destroy({ where: data });
     }
 }

@@ -16,6 +16,7 @@ const vUser = sequelize.define('view_users', {
     resetToken: DataTypes.STRING,
     resetTokenExpiry: DataTypes.DATE,
     moduleName: DataTypes.STRING,
+    lastLogin: DataTypes.DATE,
 },
     {
         indexes: [
@@ -45,6 +46,10 @@ const tUser = sequelize.define('users', {
         allowNull: true
     },
     resetTokenExpiry: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    lastLogin: {
         type: DataTypes.DATE,
         allowNull: true
     },
@@ -79,29 +84,35 @@ async function user_get(vars = null) {
 async function user_add(vars) {
     let data = {};
     if ('email' in vars) {
+        // seharusnya kita pakai bcrypt, tapi kalau pakai bcrypt, kita tidak bisa tahu user mana yang belum ganti password. 
+        // MD5 lebih mudah dan konsisten untuk dibandingkan daripada bcrypt kalau hanya sekedar password standard. 
+        // Toh nanti pada saat user login pertama kali/setelah reset, akan diminta mengganti password.
         const findemail = tUser.findOne({ where: { email: vars.email } });
         const pass = bcrypt.hash(('password' in vars) ? vars.password : constant.MY_DEFAULTPASSWORD, 12);
-        Promise.all([findemail, pass])
+        let result = await Promise.all([findemail, pass])
             .then(result => {
                 if (!result[0]) {
                     ('fullname' in vars) ? data.fullname = vars.fullname : data.fullname = 'user_' + hlp.randBetween(100, 999);
                     data.password = result[1];
                     data.email = vars.email;
                     tUser.create(data);
-                }
+                } 
             });
+        return result;
     }
 }
 
 async function user_edit(vars) {
-    let data, where = {};
-    ('userId' in vars) ? where.userId = vars.userId : null;
+    let data = {};
+    let vwhere = {};
+    ('userId' in vars) ? vwhere.userId = vars.userId : null;
     ('fullname' in vars) ? data.fullname = vars.fullname : null;
     ('email' in vars) ? data.email = vars.email : null;
+    ('password' in vars) ? data.password = vars.password : null;
     ('resetToken' in vars) ? data.resetToken = vars.resetToken : null;
     ('resetTokenExpiry' in vars) ? data.resetTokenExpiry = vars.resetTokenExpiry : null;
-    if (hlp.ObjNotEmpty(where)) {
-        return await tUser.update(data, { where: where });
+    if (hlp.ObjNotEmpty(vwhere)) {
+         return await tUser.update(data, { where: vwhere });
     }
 }
 

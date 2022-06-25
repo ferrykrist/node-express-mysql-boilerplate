@@ -1,26 +1,15 @@
 <div class="col-lg-4">
     <div class="card">
-        <div class="card-header">
-            <h5>user profile</h5>
+        <div class="card-header bg-secondary">            
+            <h4 class="text-center text-bold"><%= q_user.fullname %>  </h4>
+            <h6 class="text-center"><%= q_user.email %> </h6>
         </div>
-        <form method="post" action="/profile">
-        <div class="card-body">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <div class="form-group">
-                    <label>Nama </label>
-                    <input type="text" id="firstname" required="required" class="form-control"
-                        value="<%= q_user.fullname %> ">
-                </div>
-                <div class="form-group">
-                    <label>Email </label>
-                    <input type="text" id="email" required="required" class="form-control" value="<%= q_user.email %>">
-                </div>
-                
-                
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary float-right">Simpan</button>
-            </div>
-        </form>
+        <div class="card-body text-center">
+            <h5>Hak akses</h5>
+            <p><%= q_user.moduleName %> </p>
+        </div>
+        <div class="card-footer">
+            <p class="text-sm text-center">Untuk permintaan perubahan data, silahkan hubungi Admin</p>
+        </div>
     </div>
 </div>

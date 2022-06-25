@@ -17,7 +17,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="/assets/plugins/fontawesome-free/css/all.min.css">
-    <script src="/assets/plugins/fontawesome-free/js/all.min.js"></script>
+    <!-- <script src="/assets/plugins/fontawesome-free/js/all.min.js"></script> -->
 
     <link rel="stylesheet" href="/assets/dist/css/adminlte.css">
 
@@ -75,12 +75,12 @@
                         <i class="fa fa-lg fa-user-circle"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header"><%= session.user.fullname %></span>
+                        <a class="dropdown-item dropdown-header" href="/profile"><%= session.user.fullname %></a>
                         <div class="dropdown-divider"></div>
-                            <a href="/changepassword" class="dropdown-item"><i class="fas fa-key mr-2"></i> Ganti password</a>
-                            <a class="dropdown-item" href="/">Frontpage</a>
+                            <a href="/profile-changepassword" class="dropdown-item"><i class="fas fa-key mr-2"></i> Ganti password</a>
+                            <a class="dropdown-item" href="/"><i class="fa fa-search mr-2"></i> Frontpage</a>
                             <% if (isAuthenticated) { %>       
-                                <a href="/logout" class="dropdown-item"> Logout</a>                                     
+                                <a href="/logout" class="dropdown-item"><i class="fa fa-sign-out mr-2"></i> Logout</a>                                     
                             <% } %>
                     </div>
                 </li>
@@ -131,13 +131,13 @@
                         </div>
                     </div>
                 </div><!-- /.container-fluid -->
+                <% if (alert) { %>
+                    <%- alert %>  
+                <% } %>
             </section>
 
             <!-- Main content -->
             <section class="content">
-                <% if (alert) { %>
-                    <%- alert %>  
-                <% } %>
 
                 <div class="container-fluid">
 

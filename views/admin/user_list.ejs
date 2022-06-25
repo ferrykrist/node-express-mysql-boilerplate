@@ -2,34 +2,38 @@
     <div class="card">
         <div class="card-header">
             <h5 class="float-left">Daftar user</h5>
-            <a class="btn btn-primary float-right" href="/users/add"><i class="fa fa-plus"></i></a>
+            <a class="btn btn-primary float-right" href="/users-add"><i class="fa fa-plus"></i></a>
         </div>
         <div class="card-body p-1">
             <table class="table table-super-condensed table-striped">
                 <thead class="bg-primary text-white">
-                    <th>UID</th>
-                    <th>Fullname</th>
-                    <th>Email</th>
-                    <th>hak akses</th>
-                    <th></th>
+                    <th class="w-10">UID</th>
+                    <th class="w-20">Fullname</th>
+                    <th class="w-20">Email</th>
+                    <th class="w-20">hak akses</th>
+                    <th class="w-20">Login terakhir pada</th>
+                    <th class="w-10"></th>
                 </thead>
                 <tbody>
                     <% q_user.forEach(row => { %>
                      <tr>
                          <td><%= row.userId %> </td>
-                         <td><%= row.fullname %> </td>
+                         <td class="text-left <%= row.password==defpassword ? 'text-bold' : '' %> "><%= row.fullname %> </td>
                          <td><%= row.email %> </td>
                          <td><%= row.moduleName %> </td>
+                         <td><%= row.lastLogin %> </td>
                          <td class="text-right">
-                             <a href="/profile/<%= row.userId %> " class="btn btn-xs btn-warning text-dark"><i class="fa fa-edit"></i></a>
+                            <a onClick="return confirm('Reset password ke password default?')" href="/users-password-reset/<%= row.userId %> " class="btn btn-xs btn-default"><i class="fa fa-refresh"></i></a>
+                             <a href="/users-edit/<%= row.userId %> " class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
                              <a onClick="return confirm('<%= constant.MY_DATADELETECONFIRM %> ')" href="/users-delete/<%= row.userId %>" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
                          </td>
-
                      </tr>
                     <% }) %>
-                </tbody>
-
+                </tbody>  
             </table>
+        </div>
+        <div class="card-footer">
+            <h6>Username dicetak tebal adalah username dengan password default, yaitu <strong><%= constant.MY_DEFAULTPASSWORD %></strong> </h6>
         </div>
     </div>
 

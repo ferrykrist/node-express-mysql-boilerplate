@@ -32,12 +32,12 @@ exports.add = (req, res, next) => {
     const validationErrors = [];
     if (validator.isEmpty(req.body.moduleName)) validationErrors.push('Nama modul tidak boleh kosong');
     if (validationErrors.length) {
-        req.flash('alert', hlp.genAlert(req,{tipe: 'error',message:validationErrors}) );
+        hlp.genAlert(req,{tipe: 'error',message:validationErrors});
         return res.redirect('/modules');
     }
     Modules.create({moduleName: req.body.moduleName})
     .then(result=> {
-        req.flash('alert', hlp.genAlert(req,{message:constant.MY_DATAINSERT}) );
+        hlp.genAlert(req,{message:constant.MY_DATAINSERT});
         return res.redirect('/modules');
     })
 
@@ -47,7 +47,7 @@ exports.delete = (req, res, next) => {
    
     Modules.destroy({where: {moduleId: req.params.moduleId}})
     .then(result => {
-        req.flash('alert', hlp.genAlert(req,{tipe: 'error',message:constant.MY_DATADELETE}) );
+        hlp.genAlert(req,{tipe: 'error',message:constant.MY_DATADELETE});
         return res.redirect('/modules');
     })
     

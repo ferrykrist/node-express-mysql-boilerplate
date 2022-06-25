@@ -41,15 +41,24 @@ const oldInput = (req) => {
 exports.login = (req, res, next) => {
     if (req.method == 'POST') {
         const validationErrors = [];
-        if (!validator.isEmail(req.body.inputEmail)) validationErrors.push('Please enter a valid email address.');
-        if (validator.isEmpty(req.body.inputPassword)) validationErrors.push('Password cannot be blank.');
+        if (!validator.isEmail(req.body.inputEmail)) validationErrors.push('Email tidak valid');
+        if (validator.isEmpty(req.body.inputPassword)) validationErrors.push('Password tidak boleh kosong');
         if (validationErrors.length) {
             req.flash('error', validationErrors);
             return res.redirect('/login');
         }
-        User.vUser.findOne({ where: { email: req.body.inputEmail } })
+        User.tUser.findOne({ where: { email: req.body.inputEmail } })
             .then(user => {
                 if (user) {
+                    // kalau password nya = default password, kita lempar ke halaman ganti password
+                    if(user.dataValues.password==hlp.md5(constant.MY_DEFAULTPASSWORD)) {
+                        req.session.isLoggedIn = true;
+                        req.session.userId = user.dataValues.userId;
+                        req.session.user = user.dataValues;
+
+                        return res.redirect('/login-changepassword');
+                    }
+
                     bcrypt
                         .compare(req.body.inputPassword, user.password)
                         .then(doMatch => {
@@ -64,6 +73,9 @@ exports.login = (req, res, next) => {
                                     .then(data => { data.forEach(e => { req.session['pm_' + e.moduleName.toLowerCase()] = true; }) });
 
                                 hlp.genAlert(req, { message: constant.MY_USERWELCOME + user.dataValues.fullname });
+
+                                user.lastLogin = hlp.now();
+                                user.save();
 
                                 return req.session.save(err => {
                                     console.log(err);
@@ -165,5 +177,44 @@ exports.forgotPassword = (req, res, next) => {
         } else {
             return res.render('login_layout', { pages: '../pages/forgot_password', pageTitle: 'Forgot Password', errorMessage: message(req), oldInput: oldInput(req) });
         }
+    }
+};
+
+exports.changePassword = (req, res, next) => {
+
+    if (req.method == 'POST') {
+        User.tUser.findOne({raw: true, where: {userId: req.body.userId}})
+        .then(user => {  
+            if(user) {
+                bcrypt.hash(req.body.password1, 12)
+                .then(hashed=> {
+                    User.user_edit({userId: req.body.userId, password: hashed})
+                    .then(r => {
+                        hlp.genAlert(req,{message: constant.MY_USERPASSWORDCHANGED});
+                        return res.redirect('/logout');
+                    })
+                });            
+            }  else {
+                return res.redirect('/logout');
+            }
+        });
+    } else {
+        User.tUser.findOne({raw: true, where: {userId: req.session.userId}})
+        .then(result => {    
+            
+            if(result){
+                let vars = {
+                     q_user: result,
+                     pages: '../pages/login_changepassword',
+                     pageTitle: 'Ganti Password'
+                 };
+                 res.render('layouts/login_layout', vars); 
+            } else {
+                hlp.genAlert(req,{tipe:'error', message: constant.MY_USERDOESNOTEXISTS});
+                return res.redirect('/login');
+            }
+    
+
+        });
     }
 };

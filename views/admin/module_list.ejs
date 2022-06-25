@@ -36,15 +36,15 @@
                 <h5>Tambah Modul</h5>
             </div>
             <form action="/modules-add" method="post">
-            <div class="card-body">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <label for="moduleName">Nama Modul</label>
-                <input id="moduleName" type="text" class="form-control" name="moduleName" value="" required autofocus>
-            </div>
-            <div class="card-footer">
-                <button class="btn btn-primary text-white float-right">Tambah</button>
-            </div>
-        </form>
+                <div class="card-body">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <label for="moduleName">Nama Modul</label>
+                    <input id="moduleName" type="text" class="form-control" name="moduleName" value="" required autofocus>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary text-white float-right">Tambah</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

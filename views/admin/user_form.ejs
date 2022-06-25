@@ -1,24 +1,87 @@
-<div class="col-lg-5">
-    <div class="card">
-        <div class="card-header">
-            <h5 class="float-left">Tambah User</h5>
-            <a href="/users" class="btn btn-sm btn-danger float-right"><i class="fa fa-times"></i></a>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="float-left">Tambah User</h5>
+                <a href="/users" class="btn btn-sm btn-danger float-right"><i class="fa fa-times"></i></a>
+            </div>
+            <form action="/users-add" method="post">
+                <div class="card-body">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <div class="form-group">
+                        <label>Fullname</label>
+                        <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Fullname" value="<%= q_user? q_user.fullname: (oldInput ? oldInput.fullname: '') %> ">
+                    </div>
+                    <div class="form-group">
+                        <label>Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="<%= q_user? q_user.email: (oldInput ? oldInput.email: '') %>">
+                    </div>
+                    <% if (!edit) { %>
+                        <div class="form-group">
+                            <label>Default password</label>
+                            <input type="email" class="form-control" disabled placeholder="" value="<%= constant.MY_DEFAULTPASSWORD %> ">
+                        </div>                     
+                    <% } %>
+                </div>
+                <div class="card-footer">
+                    <button class="btn w-25 float-right <%= edit? 'btn-warning' : 'btn-primary' %> "><%= edit ? 'Edit' : 'Tambah' %> </button>
+                </div>
+                <div class="card-footer">
+                    <H6>Keterangan</H6>
+                    <ul class="text-sm">
+                        <li>Setelah login, user dapat mengganti password default ke password pribadi</li>
+                    </ul>
+                </div>
+            </form>        
         </div>
-        <form action="/users-add" method="post">
-            <div class="card-body">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <div class="form-group">
-                    <label>Fullname</label>
-                    <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Fullname" value="">
-                </div>
-                <div class="form-group">
-                    <label>Email address</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="">
-                </div>
-            </div>
-            <div class="card-footer">
-                <button class="btn btn-primary text-white float-right">Tambah</button>
-            </div>
-        </form>        
     </div>
+    <% if (edit) { %>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Hak akses</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-super-condensed table-striped">
+                        
+                        <tbody>
+                            <% q_usermodule.forEach(row => { %>
+                                <tr>
+                                    <td><%= row.moduleName %> </td>
+                                    <td class="text-right"><a href="/users-module-delete/<%= row.id %> " class="btn btn-xs btn-danger" onClick="return confirm('<%= constant.MY_DATADELETECONFIRM  %>')"><i class="fa fa-trash"></i></a></td>
+                                </tr>
+                             
+                            <% }) %>
+    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div> 
+        <div class="col-lg-4">
+            <form action="/users-module-add" method="POST">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Module</h5>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <input type="hidden" name="f2uid" value="<%= userId %> ">
+                    <div class="form-group">
+                        <label>Hak akses</label>
+                        <select multiple size=10 class="form-control" id="f2module_list" name="f2module_list[]">
+                            <% q_module.forEach(row => { %>
+                                <option value="<%= row.moduleId %>"><%= row.moduleName %> </option>                                 
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class=" float-right btn btn-danger">Tambahkan hak akses</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    <% } %>
+
 </div>

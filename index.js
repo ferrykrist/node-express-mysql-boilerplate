@@ -100,9 +100,6 @@ app.set('views', 'views');
 app.use(webRoutes);
 app.use(PageController.pageNotFound);
 
-const hbshelper = require('./app/helpers/hbshelpers');
-
-
 // kita matikan auto sync all - nya sequalize, sebagai gantinya kita pakai db/init.js untuk memanggil menjalankan sync per model
 // tujuannya kalau nanti kita menggunakan VIEW, kita bisa langsung panggil lewat model tapi tidak perlu melewati proses sync-pembuatan tabel di database
 const dbinit = require('./db/init');
