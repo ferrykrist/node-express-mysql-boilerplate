@@ -14,6 +14,7 @@ A boilerplate for **Node.js** web applications.
 8. Buka `http://localhost:3000` atau di `http://localhost:3001`
 9. Admin login di `http://localhost:3000/admin`
 10. Pastikan sudah menjalankan langkah nomor 7. default username: `admin@mail.com`, password `admin`
+11. Kalau menggunakan `npm start` anda tidak bisa menggunakan DNS lookup. Salah satu cara adalah dengan menggunakan apache dan melakukan konfigurasi vhost seperti contoh dibawah.
 
 ### Note
 
@@ -23,7 +24,7 @@ A boilerplate for **Node.js** web applications.
 4. Untuk menjalankan migration: `npx sequelize-cli db:migrate`
 5. Untuk undo migration: `npx sequelize-cli db:migrate:undo`
 6. File SQL migration ada di folder `db\migrations`. Ada 2 file: `up.sql` dan `down.sql`
-7. Tata nama untuk tabel menggunakan huruf "t" didepan nama Tabel dan huruf "v" untuk
+7. Tata nama untuk tabel menggunakan huruf "t" didepan nama Tabel dan huruf "v" untuk view
 8. Untuk default data, jalankan `npx sequelize-cli db:seed:all`
 
 
