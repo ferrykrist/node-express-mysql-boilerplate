@@ -1,0 +1,141 @@
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Tambah Departemen</h5>
+            </div>
+            <form action="/departement/add" method="post">
+                <div class="card-body">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <label for="departement">Nama Departemen</label>
+                    <input id="departement" type="text" class="form-control" name="departement" value="" required autofocus>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary text-white float-right">Tambah</button>
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h5>Daftar Departemen</h5>
+            </div>
+
+            <div class="card-body p-1">
+                <table class="table table-super-condensed table-striped">
+                    <thead class="bg-primary text-white">
+                        <th>ID</th>
+                        <th>Departemen</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <% q_departement.forEach(row=> { %>
+                            <tr>
+                                <td>
+                                    <%= row.departementId %>
+                                </td>
+                                <td>
+                                    <%= row.departement %>
+                                </td>
+                                <td class="text-right">
+                                    <a onClick="userDepartement_show('<%= row.departement %>','<%= row.departementId %>')" class="btn btn-xs btn-primary"><i class="fa fa-user-plus"></i></a>
+                                    <a onClick="return confirm('<%= constant.MY_DATADELETECONFIRM  %> ')" href="/departement/delete/<%=row.departementId  %>" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+
+                            <% }) %>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 d-none" id="userDepartement_div">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="float-left" id="userDepartement_title"></h5>
+                        <a class="btn btn-danger btn-sm float-right" onClick="$('#userDepartement_div').addClass('d-none')"><i class="fa fa-times"></i></a>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hyper-condensed table-striped">
+                            <thead>
+                                <th>User</th>
+                                <th></th>
+                            </thead>
+                            <tbody id="userDepartement_table">
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 id="userDepartement_title2"></h5>
+                    </div>
+                    <form method="post" action="/users/departement/add2">
+                        <div class="card-body">
+                            <input type="hidden" id="departementId" name="departementId">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <div class="form-group">
+                                <label>User</label>
+                                <select multiple size=8 class="form-control" id="user" name="userId[]">
+                                    <% q_user.forEach(row=> { %>
+                                        <option value="<%= row.userId %>">
+                                            <%= row.fullname %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                            <p class="text-sm">Untuk memilih lebih dari satu gunakan CTRL+klik</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary float-right" type="submit">Tambahkan user</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            function userDepartement_show(departementName, departementId) {
+                $('#userDepartement_div').removeClass('d-none');
+                $('#userDepartement_title').html('Hak Akses: ' + departementName);
+                $('#userDepartement_title2').html('Daftarkan user ke ' + departementName);
+
+                $('#departementId').val(departementId);
+                userDepartement_get(departementId)
+            }
+            function userDepartement_get(departementId) {
+                $.ajax({
+                    url: "/users/departement",
+                    type: "POST",
+                    data: {
+                        _csrf: "<%= csrfToken %>",
+                        departementId: departementId,
+                    },
+                    cache: true,
+                    success: function (result) {
+                        let data = jQuery.parseJSON(result);
+                        let html = '';
+                        data.forEach(row => {
+                            html += '<tr>';
+                            html += '<td>' + row.fullname + '</td>';
+                            html += `<td class="text-right w-20"><a href="/users/departement/delete/${row.id}" onClick="return confirm('<%= constant.MY_DATADELETECONFIRM  %>')" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></a></td>`
+                            html += '</tr>'
+                        })
+                        $('#userDepartement_table').html(html);
+                    },
+                    fail: function (xhr, status, error) {
+                        toastr["error"](error);
+                    }
+                });
+            }
+        </script>
+
+    </div>
+
+</div>

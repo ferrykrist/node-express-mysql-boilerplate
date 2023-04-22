@@ -11,15 +11,20 @@ A boilerplate for **Node.js** web applications.
 5. Update file `.env` , isikan mysql host, username dan password
 6. Jalankan dengan `npm start` (MySQL service harus sudah berjalan).
 7. Jalankan proses migrations jika ada (lihat Note dibawah)
-7. Buka `http://localhost:3000`
+8. Buka `http://localhost:3000` atau di `http://localhost:3001`
+9. Admin login di `http://localhost:3000/admin`
+10. Pastikan sudah menjalankan langkah nomor 7. default username: `admin@mail.com`, password `admin`
 
 ### Note
-1. sequalize kita buat tidak otomatis menjalankan sync(), tapi setiap model sync() secara terpisah. Diatur dalam file `db/init.js`
-2. Kenapa tidak langsung saja sync() secara global di file index.js? Kalau kita perlu menggunakan view dalam model, proses sync() akan membuat table yang tidak ada. 
+
+1. sequalize kita buat tidak otomatis menjalankan sync(), tapi setiap model sync() secara terpisah. Diatur dalam file `/db/init.js`
+2. Kenapa tidak langsung saja sync() secara global di file index.js? Kalau kita perlu menggunakan view dalam model, proses sync() akan membuat table yang tidak ada.
 3. Untuk view, tetap kita buatkan Model, tapi tidak kita lakukan sync(), yang dijalankan proses sync() hanya model yang berupa raw table.
-3. Untuk menjalankan migration: `npx sequelize-cli db:migrate`
-4. Untuk undo migration: `npx sequelize-cli db:migrate:undo`
-5. File SQL migration ada di folder `db\migrations`. Ada 2 file: `up.sql` dan `down.sql`
+4. Untuk menjalankan migration: `npx sequelize-cli db:migrate`
+5. Untuk undo migration: `npx sequelize-cli db:migrate:undo`
+6. File SQL migration ada di folder `db\migrations`. Ada 2 file: `up.sql` dan `down.sql`
+7. Tata nama untuk tabel menggunakan huruf "t" didepan nama Tabel dan huruf "v" untuk
+8. Untuk default data, jalankan `npx sequelize-cli db:seed:all`
 
 
 ### HOW TO GENERATE SELF SIGN CERTIFICATE

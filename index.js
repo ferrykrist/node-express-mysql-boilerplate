@@ -9,6 +9,8 @@ const session = require('express-session');
 const expressHbs = require('express-handlebars');
 const SequelizeStore = require("connect-session-sequelize")(session.Store); // initalize sequelize with session store
 const fs = require('fs');
+const hlp = require('./app/helpers/helpers');
+
 
 
 const http = require('http');
@@ -57,7 +59,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true,
     secret: process.env.SESSION_SECRET,
-    cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
+    cookie: { maxAge: parseInt(process.env.SESSION_MAXAGE) || 1209600000 }, // two weeks in milliseconds
     store: new SequelizeStore({
         db: sequelize,
         table: "sessions",
@@ -77,31 +79,31 @@ app.use((req, res, next) => {
     res.locals.canRegister = constant.MY_SITECANREGISTER;
     res.locals.constant = {};
     // constant disimpan di locals supaya bisa dipakai di views
-    Object.keys(constant).forEach(function(key) {
-        res.locals.constant[key]=constant[key]      
-      });
+    Object.keys(constant).forEach(function (key) {
+        res.locals.constant[key] = constant[key]
+    });
+    res.locals.hlp = hlp;
+    res.locals.uploadPath = path.join(__dirname, 'public/upload');
+
+    res.locals.public = path.join(__dirname, 'public');
+
+
     next();
 });
 
+// Block access to the meeting directory
+app.use('/public/upload', (req, res, next) => {
+    res.status(404).send('File not found');
+});
 
-
-// app.engine(
-//     'hbs',
-//     expressHbs({
-//         layoutsDir: 'views/layouts/',
-//         partialsDir: 'views/partials/',
-//         defaultLayout: 'blank',
-//         extname: 'hbs'
-//     })
-// );
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 app.use(webRoutes);
 app.use(PageController.pageNotFound);
 
-// kita matikan auto sync all - nya sequalize, sebagai gantinya kita pakai db/init.js untuk memanggil menjalankan sync per model
-// tujuannya kalau nanti kita menggunakan VIEW, kita bisa langsung panggil lewat model tapi tidak perlu melewati proses sync-pembuatan tabel di database
+
 const dbinit = require('./db/init');
 
 // Starting both http & https servers
