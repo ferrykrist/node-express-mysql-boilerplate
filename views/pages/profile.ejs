@@ -1,15 +1,23 @@
-<div class="col-lg-4">
-    <div class="card">
-        <div class="card-header bg-secondary">            
-            <h4 class="text-center text-bold"><%= q_user.fullname %>  </h4>
+
+<div class="card">
+    <div class="card-header bg-secondary">            
+        <div class="text-center">
+            <img class="profile-user-img img-fluid img-circle" style="max-height: 50px;max-width: 50px;" src="/assets/img/user-default.png" alt="User profile picture">
+            <h5 class="text-center text-bold">Hai <%= q_user.fullname %>  </h5>
             <h6 class="text-center"><%= q_user.email %> </h6>
         </div>
-        <div class="card-body text-center">
-            <h5>Hak akses</h5>
-            <p><%= q_user.moduleName %> </p>
-        </div>
-        <div class="card-footer">
-            <p class="text-sm text-center">Untuk permintaan perubahan data, silahkan hubungi Admin</p>
-        </div>
     </div>
+    <div class="card-body p-0">
+        <table class="table table-hyper-condensed">
+            <tr>
+                <td class="text-bold">Hak Akses</td>
+                <td><%= q_user.moduleName %></td>
+            </tr>
+            <tr>
+                <td class="text-bold">Departemen terdaftar</td>
+                <td><%= q_user.departement %></td>
+            </tr>
+        </table>
+        
+    </div>        
 </div>

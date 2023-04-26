@@ -1,6 +1,8 @@
 /node_modules
 /vendor
+/public/upload
 npm-debug.log
 yarn-error.log
 .env
 .DS_Store
+package-lock.json

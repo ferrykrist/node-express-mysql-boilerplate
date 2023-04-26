@@ -11,6 +11,8 @@ module.exports = Object.freeze({
     MY_USERWELCOME: 'Hai! Welcome back ',
     MY_USERNOTADMIN: 'Maaf, hanya admin yang bisa membuka bagian ini',
     MY_NOAKSES: 'Maaf, anda tidak punya akses ke bagian ini',
+    MY_NODEPARTEMENT: 'Maaf, user anda belum didaftarkan ke departemen. Hubungi admin',
+
 
     MY_CANNOTREGISTER: 'Registrasi mandiri dibatasi. Silahkan kontak Admin',
 
@@ -20,11 +22,21 @@ module.exports = Object.freeze({
     MY_DATAINSERT: 'Data sudah ditambahkan',
     MY_DATADELETE: 'Data dihapus',
     MY_DATADELETECONFIRM: 'Hapus data?',
+    MY_DATAFOUND: 'Data ditemukan.',
+    MY_DATANOTFOUND: 'Data ditemukan.',
+    MY_DATAFOUND_NOACTION: 'Data ditemukan. Proses tidak dilanjutkan',
 
-    MY_DATAORTUUPDATE: 'Data Ortu berhasil diupdate',
+
+
+    MY_FILEUPLOADED: 'File berhasil diunggah',
 
     MY_DEFAULTPASSWORD: 'p4ssword',
 
-    MY_SITECANREGISTER: true
+    MY_SITECANREGISTER: true,
+
+    MY_INSTANSI_NAME: "Departemen Pendidikan",
+    MY_INSTANSI_ALAMAT: "JL.MERDEKA NO.1, JAKARTA",
+
+
 });
 

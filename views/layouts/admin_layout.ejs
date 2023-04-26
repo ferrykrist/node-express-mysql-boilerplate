@@ -5,7 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/assets/img/logo.png">
-    <title><%= pageTitle %></title>
+    <title>
+        <%= pageTitle %>
+    </title>
 
     <!-- jQuery -->
     <script src="/assets/plugins/jquery/jquery.min.js"></script>
@@ -14,9 +16,10 @@
     <!-- AdminLTE App -->
     <script src="/assets/dist/js/adminlte.min.js"></script>
 
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="/assets/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- <script src="/assets/plugins/fontawesome-free/js/all.min.js"></script> -->
 
     <link rel="stylesheet" href="/assets/dist/css/adminlte.css">
@@ -38,14 +41,22 @@
     <link rel="stylesheet" href="/assets/plugins/select2/css/select2.min.css">
     <script src="/assets/plugins/select2/js/select2.full.min.js"></script>
 
+
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <script src="/assets/plugins/moment/moment.min.js"></script>
+
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="/assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <script src="/assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <script type="application/javascript" src="/tinymce/tinymce.min.js"></script>
 
     <style>
         html {
             font-size: 0.9rem;
         }
-
     </style>
     <link rel="stylesheet" href="/assets/tambahan.css">
 
@@ -75,12 +86,15 @@
                         <i class="fa fa-lg fa-user-circle"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a class="dropdown-item dropdown-header" href="/profile"><%= session.user.fullname %></a>
+                        <a class="dropdown-item dropdown-header" href="/profile">
+                            <%= session.user.fullname %>
+                        </a>
                         <div class="dropdown-divider"></div>
-                            <a href="/profile-changepassword" class="dropdown-item"><i class="fas fa-key mr-2"></i> Ganti password</a>
-                            <a class="dropdown-item" href="/"><i class="fa fa-search mr-2"></i> Frontpage</a>
-                            <% if (isAuthenticated) { %>       
-                                <a href="/logout" class="dropdown-item"><i class="fa fa-sign-out mr-2"></i> Logout</a>                                     
+                        <a href="/profile/changepassword" class="dropdown-item"><i class="fas fa-key mr-2"></i> Ganti
+                            password</a>
+                        <a class="dropdown-item" href="/"><i class="fa fa-search mr-2"></i> Frontpage</a>
+                        <% if (isAuthenticated) { %>
+                            <a href="/logout" class="dropdown-item"><i class="fa fa-sign-out mr-2"></i> Logout</a>
                             <% } %>
                     </div>
                 </li>
@@ -90,21 +104,27 @@
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-lime elevation-4">
-            <a href="{{ secure_url('/home" class="brand-link">
-                <img src="/assets/img/logo.png" class="brand-image img-circle elevation-3"
-                    style="opacity: .8">
-                <span class="brand-text font-weight-light"> <%= env_sitetitle %></span>
+            <a href="/dashboard" class="brand-link">
+                <img src="/assets/img/logo.png" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light text-wrap">
+                    <%= env_sitetitle %>
+                </span>
             </a>
 
             <div class="sidebar">
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-flat"
-                        data-widget="treeview" role="menu" sdata-accordion="false">
-                        <% if (session.pm_admin) { %>
-                            <%- include('../admin/admin_menu')  %>                          
-                        <% } %>
-                        <%- include('../public/public_menu')  %> 
-                        
+                <nav class="mt-4">
+
+                    <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-flat" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="/dashboard" class="nav-link"> <i class="fas fa-tachometer-alt nav-icon"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <% if (session.pm_superadmin) { %>
+                            <%- include('../admin/admin_menu') %>
+                                <% } %>
+
+
 
                     </ul>
                 </nav>
@@ -120,20 +140,22 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                           <!-- ini dulu page title -->
+                            <h1 class="m-0 text-dark">
+                                <%= pageTitle %>
+                            </h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <% if (locals.breadcrumbs) { %>
-                                    <%- breadcrumbs %>  
-                                <% } %>
+
+                                <%- locals.breadcrumbs %>
+
                             </ol>
                         </div>
                     </div>
                 </div><!-- /.container-fluid -->
                 <% if (alert) { %>
-                    <%- alert %>  
-                <% } %>
+                    <%- alert %>
+                        <% } %>
             </section>
 
             <!-- Main content -->
@@ -141,7 +163,7 @@
 
                 <div class="container-fluid">
 
-                    <%- include(pages)  %> 
+                    <%- include(pages) %>
                 </div>
 
 
@@ -152,13 +174,13 @@
             <div class="float-right d-none d-sm-block">
                 <b>Version</b> <a href="#">2022.05</a>
             </div>
-            <%= env_sitefooter %> 
+            <%= env_sitefooter %>
         </footer>
     </div>
     <!-- ./wrapper -->
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.tdatatable').DataTable({
                 "responsive": true,
                 "pageLength": 20
@@ -172,11 +194,29 @@
                 format: "yyyy-mm-dd"
             });
 
+
+
             // Summernote
             $('.summernote').summernote({
                 height: 250
             });
         });
+
+
+        function menu(namamenu) {
+            if (namamenu == "dashboard") {
+                window.open('/Home/' + namamenu, '_self');
+            }
+        }
+
+        function formatDate(datetime, format = 'DD/MM/YY HH:mm:ss') {
+            let result = '';
+            if (datetime != null) {
+                const date = new Date(datetime);
+                result = moment(date).format(format);
+            }
+            return result;
+        }
     </script>
 
 

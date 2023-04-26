@@ -1,13 +1,12 @@
-<div class="card fat">
+<div class="card">
     <div class="card-body">
-        <h4 class="card-title">Register</h4>
+        <h4 class="card-title">Daftar</h4>
         <form id="signUpForm" action="/sign-up" method="POST" class="my-login-validation" novalidate="">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input id="name" type="text" class="form-control" name="name" value="<%= oldInput.name %>" required
-                    autofocus>
+                <input id="fullname" type="text" class="form-control" name="fullname" value="<%= oldInput.fullname %>" required autofocus>
                 <div class="invalid-feedback">
-                    What's your name?
+                    Nama lengkap, misal: Staff Komisi II, dsb
                 </div>
             </div>
 
@@ -16,7 +15,7 @@
                 <input id="email" type="email" class="form-control" name="email" value="<%= oldInput.email %>" required>
                 <input type="hidden" value="<%= csrfToken %>" name="_csrf">
                 <div class="invalid-feedback">
-                    Your email is invalid
+                    Email invalid
                 </div>
             </div>
 
@@ -24,7 +23,7 @@
                 <label for="password">Password</label>
                 <input id="password" type="password" class="form-control" name="password" required data-eye>
                 <div class="invalid-feedback">
-                    Password is required
+                    Wajib isi password
                 </div>
             </div>
 
@@ -32,33 +31,32 @@
                 <label for="password">Confirm Password</label>
                 <input id="confirm_password" type="password" class="form-control" name="confirm_password" required>
                 <div class="invalid-feedback">
-                    Password is required
+                    Wajib isi password
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="custom-checkbox custom-control">
                     <input type="checkbox" name="agree" id="agree" class="custom-control-input" required="">
-                    <label for="agree" class="custom-control-label">I agree to the <a href="#">Terms and
-                            Conditions</a></label>
+                    <label for="agree" class="custom-control-label">Saya setuju dengan <a href="#">Syarat dan kondisi</a></label>
                     <div class="invalid-feedback" id="errorAgree">
-                        You must agree with our Terms and Conditions
+                        Wajib dicentang
                     </div>
                 </div>
             </div>
             <% if (errorMessage) { %>
                 <div class="alert alert-danger" role="alert">
                     <%= errorMessage %>
-                </div>  
-            <% } %>
-            <div class="form-group m-0">
-                <button type="button" id="btnSubmit" class="btn btn-primary btn-block">
-                    Register
-                </button>
-            </div>
-            <div class="mt-4 text-center">
-                Already have an account? <a href="/login">Login</a>
-            </div>
+                </div>
+                <% } %>
+                    <div class="form-group m-0">
+                        <button type="button" id="btnSubmit" class="btn btn-primary btn-block">
+                            Daftar
+                        </button>
+                    </div>
+                    <div class="mt-4 text-center">
+                        Sudah punya akun? <a href="/login">Login disini</a>
+                    </div>
         </form>
     </div>
 </div>
@@ -101,10 +99,10 @@
             inpPwd.focus();
             inpPwd.parent().append('<span class="help-txt">Password is required</span>');
             is_valid = false;
-        } else if (inpPwd.val().length < 6) {
+        } else if (inpPwd.val().length < 4) {
             inpPwd.parent().addClass('has-error');
             inpPwd.focus();
-            inpPwd.parent().append('<span class="help-txt">Password should be atleast 6 charachters</span>');
+            inpPwd.parent().append('<span class="help-txt">Password should be atleast 4 charachters</span>');
             is_valid = false;
         }
         if (inpCnfPwd.val() == '') {
