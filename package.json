@@ -9,7 +9,6 @@
         "postinstall": "cp .env-example .env"
     },
     "author": "Ferry Krist, fork from Mangesh Ghadigaonkar, https://github.com/mangya/node-express-mysql-boilerplate",
-    "license": "ISC",
     "devDependencies": {
         "nodemon": "^2.0.22",
         "prettier": "2.7.1",
